@@ -1,0 +1,390 @@
+<!-- birthday.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday!</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Roboto&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
+    <!-- CSS Styles -->
+    <style>
+        body {
+            background-color: #ffe6f0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 50px;
+            font-family: 'Roboto', sans-serif;
+            text-align: center;
+            color: #333;
+        }
+        h1 {
+            font-family: 'Pacifico', cursive;
+            font-size: 4em;
+            color: #ff4081;
+            margin-bottom: 20px;
+            animation: fadeInDown 2s ease-in-out;
+        }
+        p.message {
+            font-size: 1.5em;
+            margin: 20px 0;
+            max-width: 600px;
+            animation: fadeInUp 2s ease-in-out;
+        }
+        .photos {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin: 30px 0;
+            animation: zoomIn 2s ease-in-out;
+        }
+        .photos img {
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        .photos img:hover {
+            transform: scale(1.05);
+        }
+        .gif {
+            margin: 30px 0;
+            animation: bounceIn 2s ease-in-out;
+        }
+        .gif img {
+            width: 300px;
+            border-radius: 10px;
+            box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+        }
+        /* Balloon Animation */
+        .balloons {
+            position: absolute;
+            top: -200px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 50px;
+            animation: floatBalloons 10s infinite;
+        }
+        .balloon {
+            width: 100px;
+            height: 130px;
+            background-color: #ff8a80;
+            border-radius: 50% 50% 50% 50%;
+            position: relative;
+            animation: sway 3s ease-in-out infinite alternate;
+        }
+        .balloon::after {
+            content: '';
+            position: absolute;
+            bottom: -50px;
+            left: 50%;
+            width: 2px;
+            height: 50px;
+            background-color: #555;
+        }
+        /* Keyframes */
+        @keyframes floatBalloons {
+            0% { top: 100%; }
+            100% { top: -200px; }
+        }
+        @keyframes sway {
+            0% { transform: rotate(-5deg); }
+            100% { transform: rotate(5deg); }
+        }
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes zoomIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        @keyframes bounceIn {
+            from { opacity: 0; transform: scale(0.5); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .cake-container {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        margin: 50px 0;
+    }
+
+    .cake {
+        width: 300px;
+    }
+
+    .candles {
+        position: absolute;
+        top: -50px;
+        display: flex;
+        justify-content: space-around;
+        width: 100%;
+    }
+
+    .candle {
+        width: 10px;
+        height: 60px;
+        background-color: #FFD700;
+        position: relative;
+    }
+
+    .candle::before {
+        content: '';
+        position: absolute;
+        top: -20px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 10px;
+        height: 20px;
+        background-color: #FFA500;
+        border-radius: 50%;
+        animation: flicker 0.2s infinite;
+    }
+
+    @keyframes flicker {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.7; }
+    }
+
+    .blown-out .candle::before {
+        background-color: transparent;
+        animation: none;
+    }
+
+    #blowOutButton {
+        margin-top: 20px;
+        padding: 10px 20px;
+        font-size: 18px;
+        color: white;
+        background-color: #ff4081;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        animation: fadeInUp 2s ease-in-out;
+    }
+
+    #blowOutButton:hover {
+        background-color: #e91e63;
+    }
+    .message-section {
+        margin: 40px 0;
+        padding: 20px;
+        border: 2px solid #ff4081;
+        border-radius: 10px;
+        background-color: #f9f9f9;
+    }
+
+    .message-section h2 {
+        font-family: 'Pacifico', cursive;
+        color: #ff4081;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    #messageForm {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 20px;
+    }
+
+    #messageForm label {
+        font-family: 'Roboto', sans-serif;
+        font-size: 16px;
+        margin-bottom: 5px;
+    }
+
+    #messageForm input,
+    #messageForm textarea {
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-family: 'Roboto', sans-serif;
+        font-size: 14px;
+    }
+
+    #messageForm button {
+        padding: 10px;
+        font-size: 16px;
+        color: white;
+        background-color: #ff4081;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    #messageForm button:hover {
+        background-color: #e91e63;
+    }
+
+    #messageBoard h3 {
+        font-family: 'Pacifico', cursive;
+        color: #ff4081;
+        margin-bottom: 10px;
+    }
+
+    #messagesList {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    #messagesList li {
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        background-color: #fff3f8;
+        font-family: 'Roboto', sans-serif;
+    }
+
+    #messagesList li span {
+        font-weight: bold;
+        color: #ff4081;
+    }
+    </style>
+</head>
+<body>
+    <!-- birthday.html (add this below the existing code) -->
+    <div class="cake-container">
+        <img src="images/birthday_cake.png" alt="Birthday Cake" class="cake">
+        <div class="candles">
+            <div class="candle" id="candle1"></div>
+            <div class="candle" id="candle2"></div>
+            <div class="candle" id="candle3"></div>
+        </div>
+    </div>
+    <button id="blowOutButton" onclick="blowOutCandles()">Blow Out the Candles</button>
+
+    <div class="balloons">
+        <div class="balloon" style="background-color: #ff5252;"></div>
+        <div class="balloon" style="background-color: #ff1744;"></div>
+        <div class="balloon" style="background-color: #d500f9;"></div>
+    </div>
+
+    <h1>Happy Birthday, [Friend's Name]!</h1>
+
+    <p class="message">
+        Dear [Friend's Name],
+        <br><br>
+        On this special day, I want you to know how much your friendship means to me. From our countless adventures to our heartfelt conversations, every moment spent with you is treasured. Here's to many more years of laughter, joy, and unforgettable memories together!
+        <br><br>
+        Cheers to you on your birthday!
+        <br>
+        With love,
+        <br>
+        [Your Name]
+    </p>
+
+    <div class="photos">
+        <img src="images/photo1.jpeg" alt="Memory 1">
+        <img src="images/photo2.jpeg" alt="Memory 2">
+        <img src="images/photo3.jpeg" alt="Memory 3">
+    </div>
+    <button onclick="location.href='birthday_slideshow.html'">more memory</button>
+
+    <div class="gif">
+        <img src="https://media.giphy.com/media/3o6ZtaO9BZHcOjmErm/giphy.gif" alt="Celebration GIF">
+    </div>
+    <div id="messageBoard">
+        <h3>Messages:</h3>
+        <ul id="messagesList"></ul>
+    </div>
+    <!-- birthday.html (add this below the existing code) -->
+    <div class="message-section">
+        <h2>Messages from Friends and Family</h2>
+        
+        <form id="messageForm">
+            <label for="name">Your Name:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="message">Your Message:</label>
+            <textarea id="message" name="message" rows="4" required></textarea>
+
+            <button type="submit">Submit Message</button>
+        </form>
+
+    </div>
+
+
+    <!-- Birthday Song -->
+    <audio id="birthdaySong" src="audio/birthday.mp3" autoplay></audio>
+    <script>
+        function blowOutCandles() {
+            const candles = document.querySelectorAll('.candle');
+            candles.forEach(candle => {
+                candle.classList.add('blown-out');
+            });
+    
+            // Optional: Add confetti effect
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+    
+            // Play a sound effect (optional)
+            let audio = new Audio('audio/blow_out.mp3');
+            audio.play();
+        }
+
+        document.getElementById('messageForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            // Get the form data
+            const name = document.getElementById('name').value;
+            const message = document.getElementById('message').value;
+
+            // Create an object for the new message
+            const newMessage = { name, message };
+
+            // Get existing messages from local storage, or initialize as an empty array
+            const messages = JSON.parse(localStorage.getItem('messages')) || [];
+
+            // Add the new message to the array
+            messages.push(newMessage);
+
+            // Save the updated messages array back to local storage
+            localStorage.setItem('messages', JSON.stringify(messages));
+
+            // Display the updated messages list
+            displayMessages();
+
+            // Clear the form fields
+            document.getElementById('name').value = '';
+            document.getElementById('message').value = '';
+        });
+
+        // Function to display messages from local storage
+        function displayMessages() {
+            const messages = JSON.parse(localStorage.getItem('messages')) || [];
+            const messagesList = document.getElementById('messagesList');
+
+            // Clear the existing messages
+            messagesList.innerHTML = '';
+
+            // Loop through the messages and create list items for each
+            messages.forEach(msg => {
+                const li = document.createElement('li');
+                li.innerHTML = `<span>${msg.name}:</span> ${msg.message}`;
+                messagesList.appendChild(li);
+            });
+        }
+
+        // Display messages when the page loads
+        window.onload = displayMessages;
+    </script>
+    
+
+</body>
+</html>
